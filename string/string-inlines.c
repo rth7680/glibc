@@ -15,9 +15,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/*  <bits/string.h> and <bits/string2.h> declare some extern inline
-    functions.  These functions are declared additionally here if
-    inlining is not possible.  */
+/*  <bits/string.h> declares some extern inline functions.  These
+    functions are declared additionally here if inlining is not
+    possible.  */
 
 #undef __USE_STRING_INLINES
 #define __USE_STRING_INLINES
@@ -31,7 +31,6 @@
 
 #undef __NO_INLINE__
 #include <bits/string.h>
-#include <bits/string2.h>
 
 #include "shlib-compat.h"
 
@@ -473,4 +472,95 @@ __old_stpcpy_small (char *__dest,
 # endif
 compat_symbol (libc, __old_stpcpy_small, __stpcpy_small, GLIBC_2_1_1);
 
+#endif
+
+#if SHLIB_COMPAT (libc, GLIBC_2_1_1, GLIBC_2_25)
+/* These inline functions are not used from GLIBC 2.25 and forward.  */
+char *
+__old_strtok_r_1c (char *__s, char __sep, char **__nextp)
+{
+  char *__result;
+  if (__s == NULL)
+    __s = *__nextp;
+  while (*__s == __sep)
+    ++__s;
+  __result = NULL;
+  if (*__s != '\0')
+    {
+      __result = __s++;
+      while (*__s != '\0')
+	if (*__s++ == __sep)
+	  {
+	    __s[-1] = '\0';
+	    break;
+	  }
+    }
+  *__nextp = __s;
+  return __result;
+}
+compat_symbol (libc, __old_strtok_r_1c, __strtok_r_1c, GLIBC_2_1_1);
+
+char *
+__old_strsep_1c (char **__s, char __reject)
+{
+  char *__retval = *__s;
+  if (__retval != NULL && (*__s = strchr (__retval, __reject)) != NULL)
+    *(*__s)++ = '\0';
+  return __retval;
+}
+compat_symbol (libc, __old_strsep_1c, __strsep_1c, GLIBC_2_1_1);
+
+char *
+__old_strsep_2c (char **__s, char __reject1, char __reject2)
+{
+  char *__retval = *__s;
+  if (__retval != NULL)
+    {
+      char *__cp = __retval;
+      while (1)
+	{
+	  if (*__cp == '\0')
+	    {
+	      __cp = NULL;
+	  break;
+	    }
+	  if (*__cp == __reject1 || *__cp == __reject2)
+	    {
+	      *__cp++ = '\0';
+	      break;
+	    }
+	  ++__cp;
+	}
+      *__s = __cp;
+    }
+  return __retval;
+}
+compat_symbol (libc, __old_strsep_2c, __strsep_2c, GLIBC_2_1_1);
+
+char *
+__old_strsep_3c (char **__s, char __reject1, char __reject2, char __reject3)
+{
+  char *__retval = *__s;
+  if (__retval != NULL)
+    {
+      char *__cp = __retval;
+      while (1)
+	{
+	  if (*__cp == '\0')
+	    {
+	      __cp = NULL;
+	  break;
+	    }
+	  if (*__cp == __reject1 || *__cp == __reject2 || *__cp == __reject3)
+	    {
+	      *__cp++ = '\0';
+	      break;
+	    }
+	  ++__cp;
+	}
+      *__s = __cp;
+    }
+  return __retval;
+}
+compat_symbol (libc, __old_strsep_3c, __strsep_3c, GLIBC_2_1_1);
 #endif

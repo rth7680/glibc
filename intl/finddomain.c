@@ -125,7 +125,7 @@ _nl_find_domain (const char *dirname, char *locale,
   if (alias_value != NULL)
     {
 #if defined _LIBC || defined HAVE_STRDUP
-      locale = strdup (alias_value);
+      locale = __strdup (alias_value);
       if (locale == NULL)
 	return NULL;
 #else
