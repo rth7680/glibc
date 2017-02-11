@@ -34,7 +34,7 @@ ldq_u(const void *s)
 /* Search no more than N bytes of S for C.  */
 
 void *
-__memchr (const void *s, int xc, size_t n)
+memchr (const void *s, int xc, size_t n)
 {
   const word *s_align;
   word t, current, found, mask, offset;
@@ -171,7 +171,4 @@ __memchr (const void *s, int xc, size_t n)
   return (void *)((word)s_align + offset);
 }
 
-#ifdef weak_alias
-weak_alias (__memchr, memchr)
-#endif
 libc_hidden_builtin_def (memchr)
