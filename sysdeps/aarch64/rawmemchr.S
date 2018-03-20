@@ -33,7 +33,7 @@ L(do_strlen):
 	mov	x15, x30
 	cfi_return_column (x15)
 	mov	x14, x0
-	bl	__strlen
+	bl	__GI_strlen
 	add	x0, x14, x0
 	ret	x15
 
