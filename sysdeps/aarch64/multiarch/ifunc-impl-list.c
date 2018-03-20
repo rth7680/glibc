@@ -22,6 +22,7 @@
 #include <ldsodefs.h>
 #include <ifunc-impl-list.h>
 #include <init-arch.h>
+#include <sys/auxv.h>
 #include <stdio.h>
 
 /* Maximum number of IFUNC implementations.  */
@@ -52,6 +53,10 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 		 can do a comparative analysis with __memset_generic.  */
 	      IFUNC_IMPL_ADD (array, i, memset, (zva_size == 64), __memset_falkor)
 	      IFUNC_IMPL_ADD (array, i, memset, 1, __memset_generic))
+  IFUNC_IMPL (i, name, strlen,
+	      IFUNC_IMPL_ADD (array, i, strlen, hwcap & HWCAP_SVE,
+			      __strlen_sve)
+	      IFUNC_IMPL_ADD (array, i, strlen, 1, __strlen_generic))
 
   return i;
 }

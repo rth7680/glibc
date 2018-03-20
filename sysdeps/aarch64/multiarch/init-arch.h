@@ -22,4 +22,5 @@
   uint64_t __attribute__((unused)) midr =				      \
     GLRO(dl_aarch64_cpu_features).midr_el1;				      \
   unsigned __attribute__((unused)) zva_size =				      \
-    GLRO(dl_aarch64_cpu_features).zva_size;
+    GLRO(dl_aarch64_cpu_features).zva_size;				      \
+  unsigned __attribute__((unused)) hwcap = GLRO(dl_hwcap);
