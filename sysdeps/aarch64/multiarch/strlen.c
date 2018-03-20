@@ -1,6 +1,6 @@
-/* Define INIT_ARCH so that midr is initialized before use by IFUNCs.
+/* Multiple versions of strlen. AARCH64 version.
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Copyright (C) 2017-2018 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,13 +16,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <ldsodefs.h>
-#include <sys/auxv.h>
+/* Define multiple versions only for the definition in libc.  */
 
-#define INIT_ARCH()						\
-  uint64_t __attribute__((unused)) midr =			\
-    GLRO(dl_aarch64_cpu_features).midr_el1;			\
-  unsigned __attribute__((unused)) zva_size =			\
-    GLRO(dl_aarch64_cpu_features).zva_size;			\
-  unsigned __attribute__((unused)) hwcap = GLRO(dl_hwcap);	\
-  bool __attribute__((unused)) sve = hwcap & HWCAP_SVE
+#if IS_IN (libc)
+# define __NO_STRING_INLINES
+# define NO_MEMPCPY_STPCPY_REDIRECT
+# include <string.h>
+# include <init-arch.h>
+
+extern __typeof (strlen) __strlen_sve attribute_hidden;
+extern __typeof (strlen) __strlen_generic attribute_hidden;
+
+libc_ifunc_hidden (strlen, strlen, sve ? __strlen_sve : __strlen_generic);
+libc_hidden_def (strlen)
+#endif

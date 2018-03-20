@@ -1,6 +1,6 @@
-/* Define INIT_ARCH so that midr is initialized before use by IFUNCs.
+/* A Generic Optimized strlen implementation for AARCH64.
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Copyright (C) 2017-2018 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,13 +16,18 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <ldsodefs.h>
-#include <sys/auxv.h>
+/* The actual strlen code is in ../strlen.S.  If we are building libc this
+   file defines __strlen_generic.  Otherwise the include of ../strlen.S
+   will define the normal __strlen entry point.  */
 
-#define INIT_ARCH()						\
-  uint64_t __attribute__((unused)) midr =			\
-    GLRO(dl_aarch64_cpu_features).midr_el1;			\
-  unsigned __attribute__((unused)) zva_size =			\
-    GLRO(dl_aarch64_cpu_features).zva_size;			\
-  unsigned __attribute__((unused)) hwcap = GLRO(dl_hwcap);	\
-  bool __attribute__((unused)) sve = hwcap & HWCAP_SVE
+#include <sysdep.h>
+
+#if IS_IN (libc)
+# undef libc_hidden_builtin_def
+# define libc_hidden_builtin_def(name)
+/* Retain strong_alias for now; the __strlen alias is used by rawmemchr.S.  */
+
+# define strlen __strlen_generic
+#endif
+
+#include "../strlen.S"

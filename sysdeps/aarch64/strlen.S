@@ -84,7 +84,7 @@
 	   whether the first fetch, which may be misaligned, crosses a page
 	   boundary.  */
 
-ENTRY_ALIGN (__strlen, 6)
+ENTRY_ALIGN (strlen, 6)
 	DELOUSE (0)
 	DELOUSE (1)
 	and	tmp1, srcin, MIN_PAGE_SIZE - 1
@@ -215,6 +215,6 @@ L(page_cross):
 	csel	data1, data1, tmp4, eq
 	csel	data2, data2, tmp2, eq
 	b	L(page_cross_entry)
-END (__strlen)
-weak_alias (__strlen, strlen)
+END (strlen)
+strong_alias (strlen, __strlen)
 libc_hidden_builtin_def (strlen)
