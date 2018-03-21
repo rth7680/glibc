@@ -57,6 +57,14 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strlen, hwcap & HWCAP_SVE,
 			      __strlen_sve)
 	      IFUNC_IMPL_ADD (array, i, strlen, 1, __strlen_generic))
+  IFUNC_IMPL (i, name, strcpy,
+	      IFUNC_IMPL_ADD (array, i, strcpy, hwcap & HWCAP_SVE,
+			      __strcpy_sve)
+	      IFUNC_IMPL_ADD (array, i, strcpy, 1, __strcpy_generic))
+  IFUNC_IMPL (i, name, stpcpy,
+	      IFUNC_IMPL_ADD (array, i, stpcpy, hwcap & HWCAP_SVE,
+			      __stpcpy_sve)
+	      IFUNC_IMPL_ADD (array, i, stpcpy, 1, __stpcpy_generic))
 
   return i;
 }
