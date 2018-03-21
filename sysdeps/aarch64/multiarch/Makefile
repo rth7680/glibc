@@ -9,5 +9,6 @@ sysdep_routines += memcpy_generic memcpy_thunderx memcpy_thunderx2 \
 		   strchrnul_generic strchrnul_sve \
 		   strnlen_generic strnlen_sve \
 		   strncmp_generic strncmp_sve \
-		   memchr_generic memchr_sve
+		   memchr_generic memchr_sve \
+		   rawmemchr_generic rawmemchr_sve
 endif

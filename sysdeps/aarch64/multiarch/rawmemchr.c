@@ -1,5 +1,5 @@
-/* A Generic Optimized strlen implementation for AARCH64.
-   Copyright (C) 2018 Free Software Foundation, Inc.
+/* Multiple versions of rawmemchr. AARCH64 version.
+   Copyright (C) 2017-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,19 +16,24 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* The actual strlen code is in ../strlen.S.  If we are building libc this
-   file defines __strlen_generic.  Otherwise the include of ../strlen.S
-   will define the normal __strlen entry point.  */
-
-#include <sysdep.h>
+/* Define multiple versions only for the definition in libc.  */
 
 #if IS_IN (libc)
-# undef libc_hidden_builtin_def
-# define libc_hidden_builtin_def(name)
-# undef strong_alias
-# define strong_alias(a, b)
+# define rawmemchr __redirect_rawmemchr
+# define __rawmemchr __redirect___rawmemchr
+# define __NO_STRING_INLINES
+# define NO_MEMPCPY_STPCPY_REDIRECT
+# include <string.h>
+# include <init-arch.h>
+# undef rawmemchr
+# undef __rawmemchr
 
-# define strlen __strlen_generic
+extern __typeof (__redirect_rawmemchr) __rawmemchr_sve attribute_hidden;
+extern __typeof (__redirect_rawmemchr) __rawmemchr_generic attribute_hidden;
+
+libc_ifunc_redirected (__redirect_rawmemchr, __rawmemchr,
+		       sve ? __rawmemchr_sve : __rawmemchr_generic);
+
+weak_alias (__rawmemchr, rawmemchr);
+hidden_ver (__rawmemchr, __rawmemchr);
 #endif
-
-#include "../strlen.S"
