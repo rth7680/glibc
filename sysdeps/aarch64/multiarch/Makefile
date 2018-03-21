@@ -4,5 +4,7 @@ sysdep_routines += memcpy_generic memcpy_thunderx memcpy_thunderx2 \
 		   strlen_generic strlen_sve \
 		   strcpy_generic strcpy_sve \
 		   stpcpy_generic stpcpy_sve \
-		   strcmp_generic strcmp_sve
+		   strcmp_generic strcmp_sve \
+		   strchr_generic strchr_sve \
+		   strchrnul_generic strchrnul_sve
 endif
