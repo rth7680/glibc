@@ -73,6 +73,9 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   IFUNC_IMPL (i, name, strnlen,
 	      IFUNC_IMPL_ADD (array, i, strnlen, sve, __strnlen_sve)
 	      IFUNC_IMPL_ADD (array, i, strnlen, 1, __strnlen_generic))
+  IFUNC_IMPL (i, name, strncmp,
+	      IFUNC_IMPL_ADD (array, i, strncmp, sve, __strncmp_sve)
+	      IFUNC_IMPL_ADD (array, i, strncmp, 1, __strncmp_generic))
 
   return i;
 }
