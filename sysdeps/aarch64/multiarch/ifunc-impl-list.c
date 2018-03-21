@@ -37,6 +37,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   size_t i = 0;
 
   INIT_ARCH ();
+  bool sve = hwcap & HWCAP_SVE;
 
   /* Support sysdeps/aarch64/multiarch/memcpy.c and memmove.c.  */
   IFUNC_IMPL (i, name, memcpy,
@@ -54,17 +55,17 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memset, (zva_size == 64), __memset_falkor)
 	      IFUNC_IMPL_ADD (array, i, memset, 1, __memset_generic))
   IFUNC_IMPL (i, name, strlen,
-	      IFUNC_IMPL_ADD (array, i, strlen, hwcap & HWCAP_SVE,
-			      __strlen_sve)
+	      IFUNC_IMPL_ADD (array, i, strlen, sve, __strlen_sve)
 	      IFUNC_IMPL_ADD (array, i, strlen, 1, __strlen_generic))
   IFUNC_IMPL (i, name, strcpy,
-	      IFUNC_IMPL_ADD (array, i, strcpy, hwcap & HWCAP_SVE,
-			      __strcpy_sve)
+	      IFUNC_IMPL_ADD (array, i, strcpy, sve, __strcpy_sve)
 	      IFUNC_IMPL_ADD (array, i, strcpy, 1, __strcpy_generic))
   IFUNC_IMPL (i, name, stpcpy,
-	      IFUNC_IMPL_ADD (array, i, stpcpy, hwcap & HWCAP_SVE,
-			      __stpcpy_sve)
+	      IFUNC_IMPL_ADD (array, i, stpcpy, sve, __stpcpy_sve)
 	      IFUNC_IMPL_ADD (array, i, stpcpy, 1, __stpcpy_generic))
+  IFUNC_IMPL (i, name, strcmp,
+	      IFUNC_IMPL_ADD (array, i, strcmp, sve, __strcmp_sve)
+	      IFUNC_IMPL_ADD (array, i, strcmp, 1, __strcmp_generic))
 
   return i;
 }
