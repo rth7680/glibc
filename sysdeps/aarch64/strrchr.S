@@ -156,10 +156,16 @@ L(tail):
 	/* But if the syndrome shows no match was found, then return NULL.  */
 	cmp	src_offset, #0
 	csel	result, result, xzr, ne
-
 	ret
+
 L(null_search):
-	b	__strchrnul
+	/* Call strlen without setting up a full frame; it preserves x14/x15. */
+	mov	x15, x30
+	cfi_return_column (x15)
+	mov	x14, x0
+	bl	__strlen
+	add	x0, x14, x0
+	ret	x15
 
 END(strrchr)
 weak_alias (strrchr, rindex)
